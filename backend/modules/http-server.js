@@ -20,6 +20,14 @@ class HttpServer {
         };
     }
 
+    post(endpoint, callback) {
+        this.routes[endpoint] = {
+            endpoint: endpoint,
+            method: 'POST',
+            callback
+        };
+    }
+
     listen(port = this.DEFAULT_PORT, callback) {
         const server = this._createServer();
         server.listen(port, callback);
@@ -58,7 +66,10 @@ class HttpServer {
             urlParams = this._parseUrlParams(route.endpoint, parsedUrl.pathname);
         }
 
-        return new Request(req.method, req.url, route, req.headers, queryParams, urlParams);
+        // Get the body of the request
+        const body = this._parseReqBody(req);
+
+        return new Request(req.method, req.url, route, req.headers, queryParams, urlParams, body);
     }
 
     _matchRoute(actualUrl) {
@@ -108,6 +119,18 @@ class HttpServer {
         }
 
         return params;
+    }
+
+    _parseReqBody(req) {
+        const body = [];
+
+        req.on('data', chunk => {
+            body.push(chunk);
+        }).on('end', () => {
+            body = Buffer.concat(body).toString();
+        })
+
+        return body;
     }
 }
 
