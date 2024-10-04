@@ -9,6 +9,7 @@ class HttpServer {
 
     constructor() {
         this.routes = {};
+        this.middlewares = [];
     }
 
     // Public Methods
@@ -28,6 +29,10 @@ class HttpServer {
         };
     }
 
+    use(callback) {
+        this.middlewares.push(callback);
+    }
+
     listen(port = this.DEFAULT_PORT, callback) {
         const server = this._createServer();
         server.listen(port, callback);
@@ -39,8 +44,9 @@ class HttpServer {
             // Wrap the raw incoming and outgoing messages in custom Request and Response objects
             const request = this._parseRequest(req);
             const response = new Response(request, res);
-
             const route = request.route;
+
+            this._execute_middlewares();
 
             if (route && req.method === route.method) {
                 route.callback(request, response);
@@ -131,6 +137,12 @@ class HttpServer {
         })
 
         return body;
+    }
+
+    _execute_middlewares() {
+        for (let func of this.middlewares) {
+            func();
+        }
     }
 }
 
