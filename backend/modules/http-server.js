@@ -8,13 +8,16 @@ class HttpServer {
     DEFAULT_PORT = 3000;
 
     constructor() {
-        this.routes = {};
+        this.routes = {
+            'GET': {},
+            'POST': {}
+        };
         this.middlewares = [];
     }
 
     // Public Methods
     get(endpoint, callback) {
-        this.routes[endpoint] = {
+        this.routes['GET'][endpoint] = {
             endpoint: endpoint,
             method: 'GET',
             callback
@@ -22,7 +25,7 @@ class HttpServer {
     }
 
     post(endpoint, callback) {
-        this.routes[endpoint] = {
+        this.routes['POST'][endpoint] = {
             endpoint: endpoint,
             method: 'POST',
             callback
@@ -40,9 +43,9 @@ class HttpServer {
 
     // Private methods
     _createServer() {
-        return http.createServer((req, res) => {
+        return http.createServer(async (req, res) => {
             // Wrap the raw incoming and outgoing messages in custom Request and Response objects
-            const request = this._parseRequest(req);
+            const request = await this._parseRequest(req);
             const response = new Response(request, res);
             const route = request.route;
 
@@ -56,10 +59,11 @@ class HttpServer {
         });
     }
 
-    _parseRequest(req) {
+    async _parseRequest(req) {
         // Get the route
         const parsedUrl = url.parse(req.url, true);
-        const route = this._matchRoute(parsedUrl.pathname);
+        const httpMethod = req.method;
+        const route = this._matchRoute(parsedUrl.pathname, httpMethod);
 
         // Get the query params
         const queryParams = parsedUrl.query;
@@ -73,16 +77,17 @@ class HttpServer {
         }
 
         // Get the body of the request
-        const body = this._parseReqBody(req);
+        const body = await this._parseReqBody(req);
 
         return new Request(req.method, req.url, route, req.headers, queryParams, urlParams, body);
     }
 
-    _matchRoute(actualUrl) {
+    _matchRoute(actualUrl, httpMethod) {
         const actualUrlParts = actualUrl.split('/').filter(Boolean);
+        const methodSpecificRoutes = this.routes[httpMethod];
 
         // Try to find a matching route based on the static part (all parts that don't start with ':')
-        for (let route in this.routes) {
+        for (let route in methodSpecificRoutes) {
             const routeParts = route.split('/').filter(Boolean);
             const numStaticRouteParts = routeParts.filter(part => !part.includes(':')).length;
 
@@ -95,7 +100,7 @@ class HttpServer {
             }
 
             if (isMatch) {
-                return this.routes[route];
+                return methodSpecificRoutes[route];
             }
         }
 
@@ -127,16 +132,19 @@ class HttpServer {
         return params;
     }
 
-    _parseReqBody(req) {
-        let body = [];
+    async _parseReqBody(req) {
+        return new Promise((resolve, reject) => {
+            let body = [];
 
-        req.on('data', chunk => {
-            body.push(chunk);
-        }).on('end', () => {
-            body = Buffer.concat(body).toString();
-        })
-
-        return body;
+            req.on('data', chunk => {
+                body.push(chunk);
+            }).on('end', () => {
+                body = Buffer.concat(body).toString();
+                resolve(body);
+            }).on('error', (err) => {
+                reject(err);
+            });
+        });
     }
 
     _execute_middlewares() {

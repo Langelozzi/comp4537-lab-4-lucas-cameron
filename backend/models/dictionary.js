@@ -12,7 +12,7 @@ class Dictionary {
     }
 
     addBatch(entries) {
-        for (const [key, value] of entries) {
+        for (const [key, value] of Object.entries(entries)) {
             this.add(key, value);
         }
     }
