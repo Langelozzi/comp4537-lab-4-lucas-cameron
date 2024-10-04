@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const HttpServer = require('./modules/http-server');
-const LocalizationHelper = require('../shared/helpers/localization.helper');
 const Dictionary = require('./models/dictionary');
 
 class App {
@@ -16,8 +15,17 @@ class App {
         app.post('/api/definitions', (req, res) => {
             try {
                 const body = JSON.parse(req.body);
-                this.dictionary.addBatch(body);
-                res.status(201).send("Entry created");
+                const key = Object.keys(body)[0]
+                const value = Object.values(body)[0]
+
+                this.dictionary.add(key, value);
+
+                const response = {
+                    requestNum: this.requestCount,
+                    message: `${key}: ${value}`
+                };
+
+                res.status(201).json(response);
             } catch (e) {
                 res.status(400).send(e);
             }
@@ -28,7 +36,14 @@ class App {
 
             try {
                 const definition = this.dictionary.read(key);
-                res.status(200).send(definition);
+
+                const response = {
+                    requestNum: this.requestCount,
+                    word: key,
+                    definition: definition
+                };
+
+                res.status(200).json(response);
             } catch (e) {
                 res.status(400).send(e);
             }

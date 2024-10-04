@@ -1,8 +1,5 @@
 {
-    "Messages": {
-        "GetDate": "Hello %0, what a beautiful day. Server current date and time is %1",
-        "FileWritten": "File contents written successfully to %0"
-    },
+    "Messages": {},
     "ErrorMessages": {
         "LocalizationNotFound": "No localization string found for key: %0",
         "EndpointNotFound": "Endpoint not found",

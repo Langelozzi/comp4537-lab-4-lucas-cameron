@@ -11,11 +11,12 @@ class Dictionary {
         this.dictionary[key] = value;
     }
 
-    addBatch(entries) {
-        for (const [key, value] of Object.entries(entries)) {
-            this.add(key, value);
-        }
-    }
+    // addBatch(entries) {
+    //     // TODO: Add logic to handle when one fails, don't immediately return, store errors, and keep going
+    //     for (const [key, value] of Object.entries(entries)) {
+    //         this.add(key, value);
+    //     }
+    // }
 
     read(key) {
         if (!(key in this.dictionary)) {
