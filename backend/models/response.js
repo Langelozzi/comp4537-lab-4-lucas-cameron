@@ -1,6 +1,6 @@
 const fs = require('fs');
 const Logger = require('../modules/logger');
-const LocalizationHelper = require('../helpers/localization.helper');
+const LocalizationHelper = require('../../shared/helpers/localization.helper');
 
 class Response {
     constructor(req, res) {

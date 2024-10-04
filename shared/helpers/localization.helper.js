@@ -1,4 +1,4 @@
-const Dictionary = require('../../lang/en/en.json');
+const Dictionary = require('../lang/en/en.json');
 
 class LocalizationHelper {
     static _localizationAttribute = "data-i18n";

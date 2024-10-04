@@ -1,8 +1,8 @@
-const Utils = require('./modules/utils');
-const HttpServer = require('./modules/http-server');
-const LocalizationHelper = require('./helpers/localization.helper');
 const fs = require('fs');
 const path = require('path');
+const HttpServer = require('./modules/http-server');
+const LocalizationHelper = require('../shared/helpers/localization.helper');
+const Dictionary = require('./models/dictionary');
 
 class App {
     static dictionary = new Dictionary();
@@ -11,7 +11,7 @@ class App {
     static start() {
         const app = new HttpServer();
 
-        app.use(this.incrementRequestCount);
+        app.use(this.incrementRequestCount.bind(this));
 
         app.post('/api/definitions', (req, res) => {
             try {

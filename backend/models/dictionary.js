@@ -25,3 +25,5 @@ class Dictionary {
         return this.dictionary[key];
     }
 }
+
+module.exports = Dictionary;
