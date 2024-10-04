@@ -1,0 +1,13 @@
+{
+    "Messages": {
+        "GetDate": "Hello %0, what a beautiful day. Server current date and time is %1",
+        "FileWritten": "File contents written successfully to %0"
+    },
+    "ErrorMessages": {
+        "LocalizationNotFound": "No localization string found for key: %0",
+        "EndpointNotFound": "Endpoint not found",
+        "500": "500 - Internal Server Error",
+        "ErrorWritingFile": "Error writting to file: %0.\n\n%1",
+        "FileNotFound": "404 Not Found - Unable to locate file: %0.\n\n%1"
+    }
+}
