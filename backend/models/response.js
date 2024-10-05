@@ -3,11 +3,12 @@ const Logger = require('../modules/logger');
 const LocalizationHelper = require('../../shared/helpers/localization.helper');
 
 class Response {
-    constructor(req, res) {
+    constructor(req, res, cors_headers = {}) {
         this.req = req;
         this.rawRes = res;
         this.headers = {};
         this.statusCode = 200;
+        this.cors_headers = cors_headers;
     }
 
     // Public methods
@@ -62,6 +63,10 @@ class Response {
 
     // Private methods
     _writeHeadersAndStatus() {
+        this.headers = {
+            ...this.headers,
+            ...this.cors_headers
+        }
         this.rawRes.writeHead(this.statusCode, this.headers);
     }
 }

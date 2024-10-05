@@ -13,6 +13,7 @@ class HttpServer {
             'POST': {}
         };
         this.middlewares = [];
+        this.allowedDomains = [];
     }
 
     // Public Methods
@@ -36,6 +37,10 @@ class HttpServer {
         this.middlewares.push(callback);
     }
 
+    cors(allowedDomains) {
+        this.allowedDomains = allowedDomains;
+    }
+
     listen(port = this.DEFAULT_PORT, callback) {
         const server = this._createServer();
         server.listen(port, callback);
@@ -44,9 +49,22 @@ class HttpServer {
     // Private methods
     _createServer() {
         return http.createServer(async (req, res) => {
+            // Check the origin of the request (CORS purposed)
+            const origin = req.headers.origin;
+
+            const cors_headers = {};
+            if (this.allowedDomains.includes(origin)) {
+                cors_headers["Access-Control-Allow-Origin"] = origin;
+                cors_headers["Access-Control-Allow-Methods"] = 'GET, POST, PUT, DELETE, OPTIONS';
+                cors_headers["Access-Control-Allow-Headers"] = 'Content-Type';
+            } else {
+                // Block request using CORS
+                cors_headers["Access-Control-Allow-Origin"] = 'null';
+            }
+
             // Wrap the raw incoming and outgoing messages in custom Request and Response objects
             const request = await this._parseRequest(req);
-            const response = new Response(request, res);
+            const response = new Response(request, res, cors_headers);
             const route = request.route;
 
             this._execute_middlewares();
