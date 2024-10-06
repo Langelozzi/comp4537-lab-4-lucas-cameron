@@ -14,10 +14,6 @@ const postEntry = async (word, definition) => {
             body: JSON.stringify(requestBody)
         });
 
-        if (!response.ok) {
-            throw new Error('POST request failed');
-        }
-
         const result = await response.json();
         return result
     } catch (e) {
@@ -30,19 +26,26 @@ const onSubmit = async () => {
     const definition = document.getElementById('definition').value;
 
     const response = await postEntry(word, definition);
-    const content = JSON.parse(response.message)
-    showSnackbar(content)
+    console.log('response', response);
+    showMessage(response)
 }
 
-function showSnackbar(content) {
-    let snackbar = document.getElementById("snackbar");
+function showMessage(content) {
+    let messageBox = document.getElementById("messageBox");
 
-    // snackbar.innerHTML = LocalizationHelper.getTranslation(config.messages.storeUserMessage, [content.word, content.definition])
-    snackbar.innerHTML = `${content.word} was written to the dictionary with the defininion: ${content.definition}`
+    let message;
+    if (content.message) { // Error occured in the server
+        message = content.message;
+    } else {
+        message = `"${content.word}" was written to the dictionary with the defininion: "${content.definition}"`;
+    }
 
-    snackbar.className = "show";
+    // messageBox.innerHTML = LocalizationHelper.getTranslation(config.messages.storeUserMessage, [content.word, content.definition])
+    messageBox.innerHTML = message;
 
-    setTimeout(function() {
-        snackbar.className = snackbar.className.replace("show", "");
-    }, 3000);
+    // snackbar.className = "show";
+
+    // setTimeout(function () {
+    //     snackbar.className = snackbar.className.replace("show", "");
+    // }, 3000);
 }
