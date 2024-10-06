@@ -28,7 +28,12 @@ class App {
 
                 res.status(201).json(response);
             } catch (e) {
-                res.status(400).send(e);
+                const response = {
+                    requestNum: this.requestCount,
+                    message: e.message
+                }
+
+                res.status(400).json(response);
             }
         });
 
