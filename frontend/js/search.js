@@ -7,10 +7,6 @@ const getEntry = async (word) => {
     try {
         const response = await fetch(url, { method: method });
 
-        if (!response.ok) {
-            throw new Error('get request failed');
-        }
-
         const result = await response.json();
         console.log('Success', result);
         return result
@@ -22,4 +18,19 @@ const getEntry = async (word) => {
 const onSubmit = async () => {
     const word = document.getElementById('word').value;
     const response = await getEntry(word);
+
+    showMessage(response);
+}
+
+function showMessage(content) {
+    let messageBox = document.getElementById("messageBox");
+
+    let message;
+    if (content.message) { // Error occured in the server
+        message = content.message;
+    } else {
+        message = `"${content.word}": ${content.definition}`;
+    }
+
+    messageBox.innerHTML = message;
 }

@@ -40,12 +40,5 @@ function showMessage(content) {
         message = `"${content.word}" was written to the dictionary with the defininion: "${content.definition}"`;
     }
 
-    // messageBox.innerHTML = LocalizationHelper.getTranslation(config.messages.storeUserMessage, [content.word, content.definition])
     messageBox.innerHTML = message;
-
-    // snackbar.className = "show";
-
-    // setTimeout(function () {
-    //     snackbar.className = snackbar.className.replace("show", "");
-    // }, 3000);
 }
