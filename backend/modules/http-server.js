@@ -62,6 +62,12 @@ class HttpServer {
                 cors_headers["Access-Control-Allow-Origin"] = 'null';
             }
 
+            if (req.method === 'OPTIONS') {
+                res.writeHead(204, cors_headers);
+                res.end();
+                return;
+            }
+
             // Wrap the raw incoming and outgoing messages in custom Request and Response objects
             const request = await this._parseRequest(req);
             const response = new Response(request, res, cors_headers);

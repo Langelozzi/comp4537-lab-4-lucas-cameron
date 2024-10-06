@@ -11,7 +11,7 @@ class App {
         const app = new HttpServer();
 
         app.use(this.incrementRequestCount.bind(this));
-        // app.cors(["http://example.com"]);
+        app.cors(["http://127.0.0.1:8080"]);
 
         app.post('/api/definitions', (req, res) => {
             try {
