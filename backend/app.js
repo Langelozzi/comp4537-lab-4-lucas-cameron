@@ -23,7 +23,7 @@ class App {
 
                 const response = {
                     requestNum: this.requestCount,
-                    message: `${key}: ${value}`
+                    message: `{{${key}: ${value}}}`
                 };
 
                 res.status(201).json(response);

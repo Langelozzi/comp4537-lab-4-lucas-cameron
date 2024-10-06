@@ -1,5 +1,7 @@
 {
-    "Messages": {},
+    "Messages": {
+        storeUserMessage: "%0 was written to the dictionary with the defininion: %1"
+    },
     "ErrorMessages": {
         "LocalizationNotFound": "No localization string found for key: %0",
         "EndpointNotFound": "Endpoint not found",
