@@ -1,3 +1,6 @@
+const DuplicateKeyError = require("./DuplicateKeyError")
+const NoKeyError = require('../models/NoKeyError')
+const LocalizationHelper = require("../helpers/localization.helper")
 class Dictionary {
     constructor() {
         this.dictionary = {};
@@ -5,7 +8,7 @@ class Dictionary {
 
     add(key, value) {
         if (key in this.dictionary) {
-            throw new Error(`Warning! '${key}' already exists in dictionary.`);
+            throw new DuplicateKeyError(`Warning! '${key}' already exists in dictionary.`);
         }
 
         this.dictionary[key] = value;
@@ -20,11 +23,10 @@ class Dictionary {
 
     read(key) {
         if (!(key in this.dictionary)) {
-            throw new Error(`Warning! '${key}' does not have an entry in the dictionary.`);
+            throw new NoKeyError(LocalizationHelper.getTranslation("ErrorMessages.KeyNotFound", [key]));
         }
 
         return this.dictionary[key];
     }
 }
-
 module.exports = Dictionary;
