@@ -2,6 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const HttpServer = require('./modules/http-server');
 const Dictionary = require('./models/dictionary');
+const DuplicateKeyError = require('./models/DuplicateKeyError')
+const LocalizationHelper = require("./helpers/localization.helper");
+const NoKeyError = require('./models/NoKeyError');
+
 
 class App {
     static dictionary = new Dictionary();
@@ -23,18 +27,26 @@ class App {
 
                 const response = {
                     requestNum: this.requestCount,
-                    message: `${key}: ${value}`
+                    created: `${key}: ${value}`,
+                    message: LocalizationHelper.getTranslation("Messages.addedWord", [key])
                 };
 
                 res.status(201).json(response);
             } catch (e) {
-                const response = {
-                    requestNum: this.requestCount,
-                    message: e.message
+
+                let response = {};
+
+                if (e instanceof DuplicateKeyError) {
+                    response.errorCode = e.errorCode;
                 }
 
-                res.status(400).json(response);
+                response = {
+                    ...response,
+                    requestNum: this.requestCount,
+                    message: e.message
+                }; res.status(400).json(response);
             }
+
         });
 
         app.get('/api/definitions', (req, res) => {
@@ -46,12 +58,24 @@ class App {
                 const response = {
                     requestNum: this.requestCount,
                     word: key,
-                    definition: definition
+                    definition: definition,
+                    message: LocalizationHelper.getTranslation("Messages.keyFound", [key, definition])
                 };
 
                 res.status(200).json(response);
             } catch (e) {
-                res.status(400).send(e);
+
+                let response = {};
+
+                if (e instanceof NoKeyError) {
+                    response.errorCode = e.errorCode;
+                }
+
+                response = {
+                    ...response,
+                    requestNum: this.requestCount,
+                    message: e.message
+                }; res.status(400).json(response);
             }
         });
 
