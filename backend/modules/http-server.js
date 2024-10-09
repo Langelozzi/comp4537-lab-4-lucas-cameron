@@ -2,7 +2,7 @@ const http = require('http');
 const url = require('url');
 const Request = require('../models/request');
 const Response = require('../models/response');
-const LocalizationHelper = require('../../shared/helpers/localization.helper');
+const LocalizationHelper = require('../helpers/localization.helper');
 
 class HttpServer {
     DEFAULT_PORT = 3000;
