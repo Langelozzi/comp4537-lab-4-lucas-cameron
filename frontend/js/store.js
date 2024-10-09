@@ -1,3 +1,5 @@
+const snackbar = new SnackBar("snackbar", 30000)
+
 const postEntry = async (word, definition) => {
     const url = `${config.apiBaseUrl}/definitions`;
     const method = 'POST';
@@ -14,18 +16,23 @@ const postEntry = async (word, definition) => {
             body: JSON.stringify(requestBody)
         });
 
-        if (!response.ok) {
-            throw new Error('POST request failed');
-        }
 
         const result = await response.json();
-        console.log('Success', result);
+        if (response.status != 201) {
+            if (result.errorCode === 1) {
+                snackbar.showSnackbar(result.message, true);
+            }
+            console.log("post failed with error " + response.status);
+        } else {
+            snackbar.showSnackbar(result.message, false);
+        }
     } catch (e) {
         console.error('Error: ', e);
     }
 }
 
-const onSubmit = async () => {
+const onSubmit = async (event) => {
+    event.preventDefault();
     const word = document.getElementById('word').value;
     const definition = document.getElementById('definition').value;
 

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dismissable Snackbar</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles for the snackbar */
+        #snackbar {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            right: 30px;
+            bottom: 30px;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #snackbar.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Snackbar -->
+    <div id="snackbar">
+        <span id="snackbar-msg">This is a snackbar message.</span>
+        <button class="close-btn" onclick="dismissSnackbar('snackbar')">&times;</button>
+    </div>
+
+    <!-- Button to trigger snackbar for demonstration -->
+    <button class="btn btn-primary" onclick="showSnackbar('snackbar', 'This is a custom message!')">Show
+        Snackbar</button>
+
+    <!-- Bootstrap and jQuery JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+
+        function dismissSnackbar(elementId) {
+            let snackbar = document.getElementById(elementId);
+            snackbar.style.opacity = '0';
+            setTimeout(() => snackbar.style.visibility = 'hidden', 600);
+        }
+
+        function showSnackbar(elementId, message) {
+            let snackbar = document.getElementById(elementId);
+            let snackbarMsg = document.getElementById(`${elementId}-msg`);
+
+            // Add the message to the snackbar
+            snackbarMsg.textContent = message;
+
+            // Show the snackbar
+            snackbar.style.opacity = '1';
+            snackbar.style.visibility = 'visible';
+
+            // Hide the snackbar automatically after 30 seconds
+            setTimeout(dismissSnackbar, 30000);
+        }
+    </script>
+</body>
+
+</html>
