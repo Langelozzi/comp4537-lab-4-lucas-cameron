@@ -15,7 +15,7 @@ class App {
         const app = new HttpServer();
 
         app.use(this.incrementRequestCount.bind(this));
-        app.cors(["http://127.0.0.1:8080"]);
+        app.cors(["https://api.coverai.site"]);
 
         app.post('/api/definitions', (req, res) => {
             try {
