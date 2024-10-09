@@ -79,7 +79,7 @@ class App {
             }
         });
 
-        app.listen(app.DEFAULT_PORT, () => {
+        app.listen(3001, () => {
             console.log(`Server listening on port ${app.DEFAULT_PORT}`);
         });
     }
